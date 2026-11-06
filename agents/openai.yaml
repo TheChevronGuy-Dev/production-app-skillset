@@ -1,0 +1,4 @@
+interface:
+  display_name: "Production App Skillset"
+  short_description: "Apply and verify 100 practical app development rules"
+  default_prompt: "Use $build-production-apps to scope and implement the applicable production app rules for this project."

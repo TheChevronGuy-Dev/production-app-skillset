@@ -1,0 +1,1006 @@
+{
+  "schema_version": 1,
+  "version": "1.0.0",
+  "rules": [
+    {
+      "id": "R001",
+      "original_number": 1,
+      "pillar": "security",
+      "title": "HTTPS enforcement",
+      "kind": "control",
+      "applies_when": "Network services",
+      "guidance": "Redirect HTTP at the edge; send HSTS on HTTPS after validating subdomain readiness. HSTS alone does not secure the first visit.",
+      "verification": "Check HTTP redirect and HTTPS headers; reject mixed content."
+    },
+    {
+      "id": "R002",
+      "original_number": 2,
+      "pillar": "security",
+      "title": "Session authentication",
+      "kind": "control",
+      "applies_when": "Authenticated services",
+      "guidance": "Choose managed identity or server sessions by default where suitable. If JWTs are justified, validate signature, algorithm allowlist, issuer, audience and expiry; plan revocation.",
+      "verification": "Reject expired, tampered and wrong-audience credentials; verify logout semantics."
+    },
+    {
+      "id": "R003",
+      "original_number": 3,
+      "pillar": "security",
+      "title": "Secure cookie sessions",
+      "kind": "control",
+      "applies_when": "Browser cookie authentication",
+      "guidance": "Use HttpOnly and Secure session cookies with narrow scope. Choose Strict or Lax from actual redirect flows; None requires Secure and explicit cross-site justification. HttpOnly does not prevent XSS actions.",
+      "verification": "Inspect cookies and test external sign-in, checkout return and session theft exposure."
+    },
+    {
+      "id": "R004",
+      "original_number": 4,
+      "pillar": "security",
+      "title": "CSRF protection",
+      "kind": "control",
+      "applies_when": "Browser ambient credentials",
+      "guidance": "Use framework CSRF defenses on unsafe requests including PATCH; verify origin as appropriate. SameSite is defense in depth. Never mutate on GET.",
+      "verification": "Reject missing or invalid CSRF proof; test cross-site submissions."
+    },
+    {
+      "id": "R005",
+      "original_number": 5,
+      "pillar": "security",
+      "title": "CORS policy",
+      "kind": "control",
+      "applies_when": "Cross-origin browser access",
+      "guidance": "Allow only required origins for private APIs; never reflect arbitrary origins with credentials. Public credential-free resources may use wildcard. CORS is not authorization.",
+      "verification": "Test allowed and hostile origins plus direct nonbrowser requests."
+    },
+    {
+      "id": "R006",
+      "original_number": 6,
+      "pillar": "security",
+      "title": "SQL injection prevention",
+      "kind": "control",
+      "applies_when": "SQL data access",
+      "guidance": "Parameterize values; allowlist dynamic identifiers and sort clauses. ORMs do not protect unsafe raw SQL.",
+      "verification": "Test malicious values and sort keys; inspect raw query paths."
+    },
+    {
+      "id": "R007",
+      "original_number": 7,
+      "pillar": "security",
+      "title": "XSS prevention",
+      "kind": "control",
+      "applies_when": "Rendered untrusted content",
+      "guidance": "Use context-aware output encoding and safe DOM APIs. Sanitize deliberately supported HTML with a maintained sanitizer; avoid blanket input mangling.",
+      "verification": "Exercise HTML, attribute, URL and script-context payloads."
+    },
+    {
+      "id": "R008",
+      "original_number": 8,
+      "pillar": "security",
+      "title": "Rate limiting",
+      "kind": "control",
+      "applies_when": "Exposed endpoints",
+      "guidance": "Apply endpoint, account and network limits with shared state where needed. Configure proxy trust; combine with upstream abuse defenses rather than claiming DDoS immunity.",
+      "verification": "Exercise bursts, multiple instances and spoofed forwarding headers."
+    },
+    {
+      "id": "R009",
+      "original_number": 9,
+      "pillar": "security",
+      "title": "Password hashing",
+      "kind": "control",
+      "applies_when": "Application-owned passwords",
+      "guidance": "Prefer Argon2id with current reviewed cost settings; use maintained libraries and unique salts. Treat bcrypt as a compatibility choice and respect byte-length limits.",
+      "verification": "Verify hashes differ for identical passwords and rehash migration works."
+    },
+    {
+      "id": "R010",
+      "original_number": 10,
+      "pillar": "security",
+      "title": "Multi-factor authentication",
+      "kind": "control",
+      "applies_when": "Sensitive authenticated actions",
+      "guidance": "Offer passkeys or TOTP and protect enrollment, recovery and factor replacement. Determine assurance from the actual authentication ceremony.",
+      "verification": "Test recovery abuse, reused codes and stolen-session enrollment."
+    },
+    {
+      "id": "R011",
+      "original_number": 11,
+      "pillar": "security",
+      "title": "Content Security Policy",
+      "kind": "control",
+      "applies_when": "Browser documents",
+      "guidance": "Deploy a policy fitted to actual resources; use nonce or hash based scripts where possible. Roll out reporting, then enforcement; avoid broad unsafe exceptions.",
+      "verification": "Verify violations are blocked and sign-in/payment integrations still work."
+    },
+    {
+      "id": "R012",
+      "original_number": 12,
+      "pillar": "security",
+      "title": "Least privilege and authorization",
+      "kind": "control",
+      "applies_when": "Protected resources",
+      "guidance": "Deny by default; enforce object and tenant access on every request and worker task. Restrict service accounts separately from end-user permissions.",
+      "verification": "Attempt cross-user and cross-tenant reads and writes including exports."
+    },
+    {
+      "id": "R013",
+      "original_number": 13,
+      "pillar": "security",
+      "title": "Encryption at rest",
+      "kind": "control",
+      "applies_when": "Sensitive stored data",
+      "guidance": "Classify data; use managed storage encryption and additional field encryption where threat model warrants. Use authenticated encryption and managed key rotation, not hand-built crypto.",
+      "verification": "Test key access boundaries, rotation and recovery without exposing plaintext."
+    },
+    {
+      "id": "R014",
+      "original_number": 14,
+      "pillar": "security",
+      "title": "Transport encryption",
+      "kind": "control",
+      "applies_when": "Network communication",
+      "guidance": "Prefer TLS 1.3 and retain securely configured TLS 1.2 only when required. Validate certificates; consider service identity and mTLS across trust boundaries.",
+      "verification": "Reject invalid certificates and obsolete protocols; inspect internal hops."
+    },
+    {
+      "id": "R015",
+      "original_number": 15,
+      "pillar": "security",
+      "title": "Privacy obligations",
+      "kind": "control",
+      "applies_when": "Personal data processing",
+      "guidance": "Map data, purposes, retention and applicable obligations; implement deletion/export and consent controls where required. A banner alone is not compliance.",
+      "verification": "Trace a deletion through replicas and processors; verify optional collection choices."
+    },
+    {
+      "id": "R016",
+      "original_number": 16,
+      "pillar": "security",
+      "title": "Payment compliance scope",
+      "kind": "control",
+      "applies_when": "Card payments",
+      "guidance": "Use hosted payment collection; keep card numbers and security codes out of app servers and logs. Confirm actual obligations with the provider and qualified reviewers.",
+      "verification": "Inspect traffic/logs for card data and document integration scope."
+    },
+    {
+      "id": "R017",
+      "original_number": 17,
+      "pillar": "security",
+      "title": "Boundary input validation",
+      "kind": "control",
+      "applies_when": "APIs and untrusted data",
+      "guidance": "Validate schemas, sizes and semantics at server trust boundaries, including worker inputs. Authorize fields to prevent mass assignment; client types are insufficient.",
+      "verification": "Reject oversized, unknown privileged and malformed fields."
+    },
+    {
+      "id": "R018",
+      "original_number": 18,
+      "pillar": "security",
+      "title": "Safe errors and logs",
+      "kind": "control",
+      "applies_when": "Applications with logs",
+      "guidance": "Return generic client errors plus correlation IDs; keep restricted diagnostic logs with redaction, retention and access controls. Do not log secrets or unnecessary PII.",
+      "verification": "Trigger failures and inspect both client output and stored logs."
+    },
+    {
+      "id": "R019",
+      "original_number": 19,
+      "pillar": "security",
+      "title": "Secret management and rotation",
+      "kind": "control",
+      "applies_when": "Service credentials",
+      "guidance": "Keep secrets in managed stores, never bundles or git. Prefer short-lived credentials; rotate with overlap, revocation and rollback procedures.",
+      "verification": "Rotate a test secret and verify old credentials cease working."
+    },
+    {
+      "id": "R020",
+      "original_number": 20,
+      "pillar": "security",
+      "title": "Security response headers",
+      "kind": "control",
+      "applies_when": "Browser-facing services",
+      "guidance": "Set nosniff and appropriate referrer policy. Use CSP frame-ancestors; apply X-Frame-Options when compatible with intentional embedding.",
+      "verification": "Check actual edge responses and legitimate embed behavior."
+    },
+    {
+      "id": "R021",
+      "original_number": 21,
+      "pillar": "payments",
+      "title": "Tokenized payment collection",
+      "kind": "control",
+      "applies_when": "Card checkout",
+      "guidance": "Collect payment details with provider-hosted fields or checkout; create payment amounts and order identifiers on the server.",
+      "verification": "Tamper with client totals and confirm server pricing prevails."
+    },
+    {
+      "id": "R022",
+      "original_number": 22,
+      "pillar": "payments",
+      "title": "Idempotent payment webhooks",
+      "kind": "control",
+      "applies_when": "Payment events",
+      "guidance": "Verify signatures on raw bytes using the provider SDK, durably record events, and make business effects idempotent. Handle retries and out-of-order delivery.",
+      "verification": "Replay events, deliver concurrently/out of order, and crash between persistence and processing."
+    },
+    {
+      "id": "R023",
+      "original_number": 23,
+      "pillar": "payments",
+      "title": "Atomic inventory reservations",
+      "kind": "control",
+      "applies_when": "Limited stock checkout",
+      "guidance": "Reserve stock using conditional writes or transactions; expire abandoned reservations. Do not hold DB locks while waiting for payment network calls.",
+      "verification": "Race buyers for the last unit and test expiry/payment arrival races."
+    },
+    {
+      "id": "R024",
+      "original_number": 24,
+      "pillar": "payments",
+      "title": "Multi-currency pricing",
+      "kind": "decision",
+      "applies_when": "Multiple selling currencies",
+      "guidance": "Store explicit currency and integer minor units or suitable decimals; respect zero/three-decimal currencies. Confirm currency before purchase; locale is only a hint.",
+      "verification": "Test rounding, currency changes, refunds and server/provider amount equality."
+    },
+    {
+      "id": "R025",
+      "original_number": 25,
+      "pillar": "payments",
+      "title": "Guest checkout",
+      "kind": "decision",
+      "applies_when": "Consumer commerce",
+      "guidance": "Allow guest purchase where business rules permit; provide secure order access and optional account linking without exposing orders by email alone.",
+      "verification": "Buy as a guest and attempt unauthorized order lookup."
+    },
+    {
+      "id": "R026",
+      "original_number": 26,
+      "pillar": "payments",
+      "title": "Optimistic cart updates",
+      "kind": "control",
+      "applies_when": "Interactive cart",
+      "guidance": "Update provisionally with rollback and server reconciliation; communicate rejected stock/price changes. Do not present payment as successful optimistically.",
+      "verification": "Simulate failure, slow responses and edits arriving out of order."
+    },
+    {
+      "id": "R027",
+      "original_number": 27,
+      "pillar": "payments",
+      "title": "Persistent cart",
+      "kind": "control",
+      "applies_when": "Returning shoppers",
+      "guidance": "Persist nonsensitive cart identifiers/items; reconcile server prices, quantities and ownership after sign-in. Avoid storing session credentials in localStorage.",
+      "verification": "Merge guest/account carts and verify account switching cannot leak items."
+    },
+    {
+      "id": "R028",
+      "original_number": 28,
+      "pillar": "payments",
+      "title": "Address assistance",
+      "kind": "decision",
+      "applies_when": "Shipped goods",
+      "guidance": "Provide optional address suggestions and manual entry; validate shipping eligibility server-side and minimize data sent to vendors.",
+      "verification": "Test unsupported addresses, keyboard access and vendor failure."
+    },
+    {
+      "id": "R029",
+      "original_number": 29,
+      "pillar": "payments",
+      "title": "Tax calculation",
+      "kind": "control",
+      "applies_when": "Taxable sales",
+      "guidance": "Determine obligations and configured jurisdictions with appropriate expertise; compute tax server-side using current provider rules and retain calculation evidence.",
+      "verification": "Test inclusive/exclusive tax, discounts and refund adjustments in sandbox."
+    },
+    {
+      "id": "R030",
+      "original_number": 30,
+      "pillar": "payments",
+      "title": "Refund reconciliation",
+      "kind": "control",
+      "applies_when": "Refundable payments",
+      "guidance": "Model refunds as asynchronous states; use idempotency and reconcile provider results to the ledger. Never promise immediate bank settlement.",
+      "verification": "Test duplicate requests, partial refunds, provider failure and delayed completion."
+    },
+    {
+      "id": "R031",
+      "original_number": 31,
+      "pillar": "payments",
+      "title": "3DS and payment challenges",
+      "kind": "control",
+      "applies_when": "Provider-required card authentication",
+      "guidance": "Use provider-supported challenge flows; handle pending, failed, canceled and resumed attempts. Confirm success server-side.",
+      "verification": "Exercise sandbox challenge, cancel, retry and asynchronous completion."
+    },
+    {
+      "id": "R032",
+      "original_number": 32,
+      "pillar": "payments",
+      "title": "Cart recovery messages",
+      "kind": "decision",
+      "applies_when": "Optional marketing follow-up",
+      "guidance": "Use lawful eligibility, consent/preferences where required, suppression lists and frequency limits; distinguish marketing from transactional messages.",
+      "verification": "Confirm opted-out and completed buyers receive no recovery campaign."
+    },
+    {
+      "id": "R033",
+      "original_number": 33,
+      "pillar": "payments",
+      "title": "Server-side discounts",
+      "kind": "control",
+      "applies_when": "Discounted sales",
+      "guidance": "Enforce eligibility, expiry, stacking and redemption limits atomically; recalculate totals on the server.",
+      "verification": "Race limited coupons and tamper with discount amounts and account identity."
+    },
+    {
+      "id": "R034",
+      "original_number": 34,
+      "pillar": "performance",
+      "title": "Server-side rendering",
+      "kind": "decision",
+      "applies_when": "Pages needing dynamic initial HTML",
+      "guidance": "Choose SSR per route based on content and latency; avoid caching private output across users and unnecessary server work.",
+      "verification": "Measure initial response and test personalized cache isolation."
+    },
+    {
+      "id": "R035",
+      "original_number": 35,
+      "pillar": "performance",
+      "title": "Static generation",
+      "kind": "decision",
+      "applies_when": "Public cacheable pages",
+      "guidance": "Prebuild suitable content and define refresh/invalidation; keep private or rapidly changing values authoritative at runtime.",
+      "verification": "Change content/prices and verify freshness and preview behavior."
+    },
+    {
+      "id": "R036",
+      "original_number": 36,
+      "pillar": "performance",
+      "title": "CDN distribution",
+      "kind": "decision",
+      "applies_when": "Public assets or edge workloads",
+      "guidance": "Cache public resources with explicit keys and invalidation. Keep credentials and private responses out of shared caches.",
+      "verification": "Compare authenticated users and verify cache purge/version behavior."
+    },
+    {
+      "id": "R037",
+      "original_number": 37,
+      "pillar": "performance",
+      "title": "Database indexes",
+      "kind": "control",
+      "applies_when": "Measured slow queries",
+      "guidance": "Use query plans and representative data to add targeted indexes; consider write cost, locking and migration safety.",
+      "verification": "Compare query plans, latency and write throughput before/after."
+    },
+    {
+      "id": "R038",
+      "original_number": 38,
+      "pillar": "performance",
+      "title": "Connection pooling",
+      "kind": "control",
+      "applies_when": "Database-backed services",
+      "guidance": "Budget connections across instances and workers; use a pool compatible with deployment and transaction semantics.",
+      "verification": "Load-test peak concurrency and verify bounded connection counts/timeouts."
+    },
+    {
+      "id": "R039",
+      "original_number": 39,
+      "pillar": "performance",
+      "title": "Caching",
+      "kind": "decision",
+      "applies_when": "Measured repeated expensive work",
+      "guidance": "Choose cache only with clear invalidation and ownership keys; bound TTL and memory, prevent stampedes, and handle cache outage.",
+      "verification": "Test stale values, tenant isolation and cache loss."
+    },
+    {
+      "id": "R040",
+      "original_number": 40,
+      "pillar": "performance",
+      "title": "Lazy loading",
+      "kind": "control",
+      "applies_when": "Noncritical resources",
+      "guidance": "Defer below-fold images and optional code; do not lazy-load primary above-fold content. Preserve accessibility and dimensions.",
+      "verification": "Measure initial requests and verify deferred content loads on interaction."
+    },
+    {
+      "id": "R041",
+      "original_number": 41,
+      "pillar": "performance",
+      "title": "Asset compression",
+      "kind": "control",
+      "applies_when": "Network-delivered assets",
+      "guidance": "Use appropriate modern image formats with fallbacks and Brotli/gzip for text; preserve visual quality and avoid compressing already-compressed data unnecessarily.",
+      "verification": "Inspect negotiated formats, response sizes and readable fallback output."
+    },
+    {
+      "id": "R042",
+      "original_number": 42,
+      "pillar": "performance",
+      "title": "API pagination",
+      "kind": "control",
+      "applies_when": "Unbounded collections",
+      "guidance": "Set hard size limits and stable ordering; use opaque cursors where appropriate and authorize every page.",
+      "verification": "Test ties, concurrent inserts, bad cursors and maximum page limits."
+    },
+    {
+      "id": "R043",
+      "original_number": 43,
+      "pillar": "performance",
+      "title": "Background queues",
+      "kind": "control",
+      "applies_when": "Slow or retryable jobs",
+      "guidance": "Persist jobs reliably, define retry/backoff, idempotency and dead-letter handling; use an outbox when DB changes must cause jobs.",
+      "verification": "Crash workers, replay jobs and observe backlog/poison-message handling."
+    },
+    {
+      "id": "R044",
+      "original_number": 44,
+      "pillar": "performance",
+      "title": "Micro-frontends",
+      "kind": "decision",
+      "applies_when": "Independent teams with proven need",
+      "guidance": "Default to a simpler modular application; adopt micro-frontends only with explicit ownership and deployment benefits that justify integration cost.",
+      "verification": "Document the tradeoff and test shared auth, routing and version skew."
+    },
+    {
+      "id": "R045",
+      "original_number": 45,
+      "pillar": "performance",
+      "title": "Load balancing",
+      "kind": "control",
+      "applies_when": "Multiple application instances",
+      "guidance": "Use health/readiness checks and connection draining; design routing around long-lived connections and regional constraints.",
+      "verification": "Remove an instance under traffic and verify safe rerouting."
+    },
+    {
+      "id": "R046",
+      "original_number": 46,
+      "pillar": "performance",
+      "title": "Stateless app servers",
+      "kind": "control",
+      "applies_when": "Horizontally scaled request handlers",
+      "guidance": "Move durable state to suitable stores; handle websocket/session affinity explicitly when needed. Do not mistake stateless servers for a stateless system.",
+      "verification": "Restart instances mid-flow and verify no durable state loss."
+    },
+    {
+      "id": "R047",
+      "original_number": 47,
+      "pillar": "ux",
+      "title": "Responsive design",
+      "kind": "control",
+      "applies_when": "Interactive web or mobile UI",
+      "guidance": "Design small-screen layouts, touch targets, safe areas and zoom behavior; use content-driven breakpoints.",
+      "verification": "Test narrow/wide layouts, zoom, orientation and long content."
+    },
+    {
+      "id": "R048",
+      "original_number": 48,
+      "pillar": "ux",
+      "title": "Accessibility target",
+      "kind": "control",
+      "applies_when": "User interfaces",
+      "guidance": "Target WCAG 2.2 AA for web unless requirements specify otherwise. Use semantic controls, labels and accessible errors; do not claim conformance from an automated scan.",
+      "verification": "Combine automated checks with keyboard, screen reader and contrast review."
+    },
+    {
+      "id": "R049",
+      "original_number": 49,
+      "pillar": "ux",
+      "title": "Keyboard and focus",
+      "kind": "control",
+      "applies_when": "Interactive UI",
+      "guidance": "Use predictable focus order, visible focus, modal containment/return and escape behavior. Prefer native controls over custom ARIA widgets.",
+      "verification": "Complete key flows without a pointer and check no unintended traps."
+    },
+    {
+      "id": "R050",
+      "original_number": 50,
+      "pillar": "ux",
+      "title": "Loading states",
+      "kind": "decision",
+      "applies_when": "Noticeable asynchronous UI work",
+      "guidance": "Use appropriate skeletons or progress messages without flicker; announce meaningful changes and respect reduced motion.",
+      "verification": "Test slow/offline transitions and screen reader announcements."
+    },
+    {
+      "id": "R051",
+      "original_number": 51,
+      "pillar": "ux",
+      "title": "Layout stability",
+      "kind": "control",
+      "applies_when": "Rendered visual content",
+      "guidance": "Reserve image/embed dimensions and account for font swaps and inserted banners.",
+      "verification": "Measure CLS under slow fonts/images and consent/loading transitions."
+    },
+    {
+      "id": "R052",
+      "original_number": 52,
+      "pillar": "ux",
+      "title": "Form autocomplete",
+      "kind": "control",
+      "applies_when": "Data-entry forms",
+      "guidance": "Use standard input types and autocomplete tokens on appropriate fields; keep payment card fields within provider-hosted integrations.",
+      "verification": "Test browser autofill, password managers and mobile keyboards."
+    },
+    {
+      "id": "R053",
+      "original_number": 53,
+      "pillar": "ux",
+      "title": "Inline validation",
+      "kind": "control",
+      "applies_when": "Interactive forms",
+      "guidance": "Validate helpfully without interrupting typing; retain values and connect errors to labels. Repeat validation on the server.",
+      "verification": "Submit invalid forms by keyboard and verify readable recoverable errors."
+    },
+    {
+      "id": "R054",
+      "original_number": 54,
+      "pillar": "ux",
+      "title": "Theme preferences",
+      "kind": "decision",
+      "applies_when": "Products offering themes",
+      "guidance": "Respect system preference and explicit user choice; ensure contrast in every theme and avoid initial theme flash.",
+      "verification": "Test theme persistence, system changes and contrast."
+    },
+    {
+      "id": "R055",
+      "original_number": 55,
+      "pillar": "ux",
+      "title": "Optimistic mutations",
+      "kind": "decision",
+      "applies_when": "Reversible low-risk actions",
+      "guidance": "Use pending state, cancellation/rollback and response ordering. Require authoritative confirmation for destructive or financial outcomes.",
+      "verification": "Test failed and reordered operations and concurrent edits."
+    },
+    {
+      "id": "R056",
+      "original_number": 56,
+      "pillar": "ux",
+      "title": "Collection navigation",
+      "kind": "decision",
+      "applies_when": "Long lists",
+      "guidance": "Choose pagination/load-more/infinite scrolling based on task; preserve position and access to footer and navigation.",
+      "verification": "Test back navigation, keyboard traversal and refresh/bookmarks."
+    },
+    {
+      "id": "R057",
+      "original_number": 57,
+      "pillar": "ux",
+      "title": "Notifications in UI",
+      "kind": "decision",
+      "applies_when": "Background status updates",
+      "guidance": "Use accessible status messages with sufficient display time; keep essential errors/actionable details persistent instead of toast-only.",
+      "verification": "Test screen reader announcements and recovery after a toast disappears."
+    },
+    {
+      "id": "R058",
+      "original_number": 58,
+      "pillar": "ux",
+      "title": "Browser compatibility",
+      "kind": "control",
+      "applies_when": "Web apps",
+      "guidance": "Define a support matrix and test Chromium, WebKit and Gecko as relevant; use feature detection and progressive enhancement.",
+      "verification": "Run critical flows on supported engines and representative devices."
+    },
+    {
+      "id": "R059",
+      "original_number": 59,
+      "pillar": "ux",
+      "title": "Empty states",
+      "kind": "control",
+      "applies_when": "Views with no results",
+      "guidance": "Distinguish first use, no match, permissions, loading and failure; offer the appropriate next action.",
+      "verification": "Exercise each state without suggesting unauthorized actions."
+    },
+    {
+      "id": "R060",
+      "original_number": 60,
+      "pillar": "search",
+      "title": "Faceted search",
+      "kind": "decision",
+      "applies_when": "Large searchable catalogs",
+      "guidance": "Use validated filters reflected in URLs; authorize query results and counts; provide reset controls.",
+      "verification": "Test filter combinations, zero results and private item leakage."
+    },
+    {
+      "id": "R061",
+      "original_number": 61,
+      "pillar": "search",
+      "title": "Fuzzy matching",
+      "kind": "decision",
+      "applies_when": "Search with spelling variability",
+      "guidance": "Tune matching to the domain and language, enforce access filters and bound query expense.",
+      "verification": "Evaluate typos, exact identifiers, relevance and sensitive results."
+    },
+    {
+      "id": "R062",
+      "original_number": 62,
+      "pillar": "search",
+      "title": "Sitemaps",
+      "kind": "decision",
+      "applies_when": "Public indexable websites",
+      "guidance": "List canonical indexable URLs; regenerate on meaningful change rather than requiring daily runs. Exclude private and redirect/error pages.",
+      "verification": "Parse generated XML and check representative URL status/indexability."
+    },
+    {
+      "id": "R063",
+      "original_number": 63,
+      "pillar": "search",
+      "title": "Semantic HTML",
+      "kind": "control",
+      "applies_when": "Web pages",
+      "guidance": "Use appropriate landmarks, heading order and native interactive elements; avoid redundant ARIA.",
+      "verification": "Inspect document structure and screen reader navigation."
+    },
+    {
+      "id": "R064",
+      "original_number": 64,
+      "pillar": "search",
+      "title": "Structured data",
+      "kind": "decision",
+      "applies_when": "Eligible public rich-result pages",
+      "guidance": "Use supported JSON-LD types with truthful visible content; never fabricate ratings or promise rich results.",
+      "verification": "Validate structured data and compare values with page content."
+    },
+    {
+      "id": "R065",
+      "original_number": 65,
+      "pillar": "search",
+      "title": "Canonical URLs",
+      "kind": "decision",
+      "applies_when": "Public pages with URL variants",
+      "guidance": "Set consistent canonical targets and coherent redirects/sitemaps; canonical is a hint, not access control.",
+      "verification": "Compare variant URLs and confirm intended canonical is indexable."
+    },
+    {
+      "id": "R066",
+      "original_number": 66,
+      "pillar": "search",
+      "title": "Readable URLs",
+      "kind": "decision",
+      "applies_when": "Public routes",
+      "guidance": "Use stable meaningful slugs, support necessary Unicode and redirect changed paths; avoid sensitive identifiers in URLs.",
+      "verification": "Test collisions, renamed records, encoding and old links."
+    },
+    {
+      "id": "R067",
+      "original_number": 67,
+      "pillar": "search",
+      "title": "Typeahead",
+      "kind": "decision",
+      "applies_when": "Search suggestion UI",
+      "guidance": "Debounce and cancel stale queries; implement accessible combobox behavior and do not expose private search history.",
+      "verification": "Test rapid input, response reorder, keyboard selection and privacy."
+    },
+    {
+      "id": "R068",
+      "original_number": 68,
+      "pillar": "search",
+      "title": "Server-rendered metadata",
+      "kind": "decision",
+      "applies_when": "Shareable public pages",
+      "guidance": "Deliver title/description/Open Graph metadata in initial HTML where crawlers need it; use absolute image URLs and avoid leaking private content.",
+      "verification": "Fetch HTML without scripts and test image accessibility."
+    },
+    {
+      "id": "R069",
+      "original_number": 69,
+      "pillar": "operations",
+      "title": "CI/CD checks",
+      "kind": "control",
+      "applies_when": "Versioned application development",
+      "guidance": "Run builds, lint, tests and security checks on PRs with minimal permissions. Protect release paths and never expose secrets to untrusted contributions.",
+      "verification": "Verify a failing change blocks the configured merge/release path."
+    },
+    {
+      "id": "R070",
+      "original_number": 70,
+      "pillar": "operations",
+      "title": "Blue-green deployment",
+      "kind": "decision",
+      "applies_when": "Services requiring low-downtime releases",
+      "guidance": "Use only when hosting and data compatibility support it; migrate using expand/contract patterns and keep rollback credible.",
+      "verification": "Rehearse switch/rollback with old and new versions against the same schema."
+    },
+    {
+      "id": "R071",
+      "original_number": 71,
+      "pillar": "operations",
+      "title": "Canary releases",
+      "kind": "decision",
+      "applies_when": "Risky changes with observable traffic",
+      "guidance": "Choose cohort and ramp from risk, not a universal five percent; define metrics, abort thresholds and rollback ownership.",
+      "verification": "Inject an error and demonstrate rollout halt and recovery."
+    },
+    {
+      "id": "R072",
+      "original_number": 72,
+      "pillar": "operations",
+      "title": "Centralized logs",
+      "kind": "control",
+      "applies_when": "Distributed or production services",
+      "guidance": "Collect structured redacted logs with correlation IDs, access control, retention and actionable alerts.",
+      "verification": "Trace one failed flow across components without exposing secrets."
+    },
+    {
+      "id": "R073",
+      "original_number": 73,
+      "pillar": "operations",
+      "title": "Synthetic monitoring",
+      "kind": "decision",
+      "applies_when": "Deployed critical flows",
+      "guidance": "Use isolated test identities/data and safe sandbox payment flows; alert on actionable availability and latency failures.",
+      "verification": "Break a dependency and verify alert routing and cleanup."
+    },
+    {
+      "id": "R074",
+      "original_number": 74,
+      "pillar": "operations",
+      "title": "Graceful shutdown",
+      "kind": "control",
+      "applies_when": "Long-running servers or workers",
+      "guidance": "Stop accepting new work, drain requests, acknowledge jobs only after durable completion and bound termination time.",
+      "verification": "Terminate during requests/jobs and verify safe retry behavior."
+    },
+    {
+      "id": "R075",
+      "original_number": 75,
+      "pillar": "operations",
+      "title": "Backups and recovery",
+      "kind": "control",
+      "applies_when": "Durable business data",
+      "guidance": "Choose RPO/RTO, backup frequency and point-in-time logging accordingly. Encrypt backups and regularly restore to an isolated environment.",
+      "verification": "Restore to a chosen time and measure actual data loss and recovery duration."
+    },
+    {
+      "id": "R076",
+      "original_number": 76,
+      "pillar": "operations",
+      "title": "Multi-region recovery",
+      "kind": "decision",
+      "applies_when": "Business-justified regional outage risk",
+      "guidance": "Define replication consistency, failover authority, residency constraints and split-brain prevention. Simpler tested backups may fit smaller systems.",
+      "verification": "Rehearse failover/failback and reconciliation under a documented scenario."
+    },
+    {
+      "id": "R077",
+      "original_number": 77,
+      "pillar": "operations",
+      "title": "Circuit breakers",
+      "kind": "control",
+      "applies_when": "Unreliable remote dependencies",
+      "guidance": "Set timeouts, bounded retries with jitter and safe fallbacks; use circuit breakers when they improve failure isolation.",
+      "verification": "Simulate latency/errors and ensure requests and retries remain bounded."
+    },
+    {
+      "id": "R078",
+      "original_number": 78,
+      "pillar": "operations",
+      "title": "Reproducible runtime",
+      "kind": "decision",
+      "applies_when": "Applications with environment drift",
+      "guidance": "Use lockfiles and reproducible builds; containers are optional. If used, run minimal nonroot images, scan them and keep secrets out of layers.",
+      "verification": "Build cleanly and run under intended permissions/runtime constraints."
+    },
+    {
+      "id": "R079",
+      "original_number": 79,
+      "pillar": "analytics",
+      "title": "Client analytics",
+      "kind": "decision",
+      "applies_when": "Purpose-justified telemetry",
+      "guidance": "Collect minimal events with documented retention and appropriate user choices; avoid raw input capture and unnecessary identifiers.",
+      "verification": "Inspect event payloads and verify collection follows preferences."
+    },
+    {
+      "id": "R080",
+      "original_number": 80,
+      "pillar": "analytics",
+      "title": "Feature flags",
+      "kind": "decision",
+      "applies_when": "Staged or remotely controlled behavior",
+      "guidance": "Evaluate access-sensitive logic server-side; assign owners, expiry and fallback. Flags are not authorization.",
+      "verification": "Test missing flag service, both branches and eventual removal."
+    },
+    {
+      "id": "R081",
+      "original_number": 81,
+      "pillar": "analytics",
+      "title": "A/B experiments",
+      "kind": "decision",
+      "applies_when": "Measurable product hypotheses",
+      "guidance": "Define outcome, sample strategy and guardrails before launch; assign stable cohorts and respect data choices.",
+      "verification": "Check allocation, contamination and stopping criteria."
+    },
+    {
+      "id": "R082",
+      "original_number": 82,
+      "pillar": "analytics",
+      "title": "Server-side analytics",
+      "kind": "decision",
+      "applies_when": "Approved conversion measurement",
+      "guidance": "Preserve consent/opt-outs and minimize payloads; never use server tracking to defeat expressed privacy choices. Deduplicate browser/server events.",
+      "verification": "Verify opted-out events stay suppressed and duplicate conversions collapse."
+    },
+    {
+      "id": "R083",
+      "original_number": 83,
+      "pillar": "analytics",
+      "title": "Idempotent data synchronization",
+      "kind": "control",
+      "applies_when": "Retried imports or integrations",
+      "guidance": "Use stable source keys, unique constraints, checkpoints and explicit conflict policy; handle deletions as well as inserts.",
+      "verification": "Replay imports and interrupt/restart midway without duplicate rows."
+    },
+    {
+      "id": "R084",
+      "original_number": 84,
+      "pillar": "analytics",
+      "title": "Analytics data minimization",
+      "kind": "control",
+      "applies_when": "Telemetry with sensitive attributes",
+      "guidance": "Remove or aggregate unnecessary data before collection; pseudonymization is not anonymization. Limit join keys and access.",
+      "verification": "Inspect exported data and attempt unauthorized reidentification joins."
+    },
+    {
+      "id": "R085",
+      "original_number": 85,
+      "pillar": "analytics",
+      "title": "Identity merging",
+      "kind": "decision",
+      "applies_when": "Guest-to-account attribution",
+      "guidance": "Merge only with verified identity and allowed purpose; maintain logout boundaries and avoid merging shared-device users incorrectly.",
+      "verification": "Test account switching, shared devices and deletion propagation."
+    },
+    {
+      "id": "R086",
+      "original_number": 86,
+      "pillar": "communications",
+      "title": "Transactional email",
+      "kind": "control",
+      "applies_when": "Required account/order notices",
+      "guidance": "Use a reliable provider, durable enqueue, idempotency and bounce handling; configure sender authentication and separate marketing preferences.",
+      "verification": "Retry jobs and test bounces without duplicate sensitive notices."
+    },
+    {
+      "id": "R087",
+      "original_number": 87,
+      "pillar": "communications",
+      "title": "SMS alerts",
+      "kind": "decision",
+      "applies_when": "Opted-in SMS communication",
+      "guidance": "Respect channel permissions and relevant rules; validate provider webhooks, prevent abuse and avoid sensitive lock-screen content.",
+      "verification": "Test opt-out, invalid signatures, retries and spend limits."
+    },
+    {
+      "id": "R088",
+      "original_number": 88,
+      "pillar": "communications",
+      "title": "Push notifications",
+      "kind": "decision",
+      "applies_when": "Opted-in device messaging",
+      "guidance": "Bind tokens to the correct account/device, revoke on logout and clean invalid tokens; minimize visible sensitive data.",
+      "verification": "Switch accounts on one device and verify old-account pushes stop."
+    },
+    {
+      "id": "R089",
+      "original_number": 89,
+      "pillar": "communications",
+      "title": "Magic sign-in links",
+      "kind": "control",
+      "applies_when": "Passwordless email authentication",
+      "guidance": "Use high-entropy, short-lived single-use tokens stored hashed; rate-limit requests and restrict redirects. Avoid consuming credentials on email-scanner GET requests.",
+      "verification": "Test replay, expiry, link scanners, redirect tampering and account enumeration."
+    },
+    {
+      "id": "R090",
+      "original_number": 90,
+      "pillar": "communications",
+      "title": "In-app inbox",
+      "kind": "decision",
+      "applies_when": "Persistent user notices",
+      "guidance": "Authorize per-user messages, paginate and synchronize read state; localize content and retain only as needed.",
+      "verification": "Try another user's message ID and concurrent read updates."
+    },
+    {
+      "id": "R091",
+      "original_number": 91,
+      "pillar": "localization",
+      "title": "Locale routing",
+      "kind": "decision",
+      "applies_when": "Multiple language/market routes",
+      "guidance": "Choose stable locale rules, explicit user override and consistent fallback; connect localized equivalents appropriately.",
+      "verification": "Test unknown locales, direct links and preference changes."
+    },
+    {
+      "id": "R092",
+      "original_number": 92,
+      "pillar": "localization",
+      "title": "Dates, times and numbers",
+      "kind": "control",
+      "applies_when": "Locale-sensitive output",
+      "guidance": "Store instants with timezone context as needed; use locale formatting and explicit display zones. Preserve date-only and scheduled-local-time semantics.",
+      "verification": "Test DST gaps/overlaps, date boundaries and decimal separators."
+    },
+    {
+      "id": "R093",
+      "original_number": 93,
+      "pillar": "localization",
+      "title": "RTL layouts",
+      "kind": "decision",
+      "applies_when": "Right-to-left language support",
+      "guidance": "Use logical CSS properties and explicit bidirectional handling; mirror directional affordances selectively.",
+      "verification": "Test real RTL text, mixed identifiers and keyboard order."
+    },
+    {
+      "id": "R094",
+      "original_number": 94,
+      "pillar": "engineering",
+      "title": "Linting and formatting",
+      "kind": "control",
+      "applies_when": "Maintained codebase",
+      "guidance": "Adopt stack-appropriate lint/format rules in CI; local hooks are convenience rather than the enforcement boundary.",
+      "verification": "Submit a deliberate violation and verify CI reports it."
+    },
+    {
+      "id": "R095",
+      "original_number": 95,
+      "pillar": "engineering",
+      "title": "Unit testing",
+      "kind": "control",
+      "applies_when": "Business logic and invariants",
+      "guidance": "Prioritize meaningful boundary/error tests and critical math; avoid coverage targets that reward implementation-mirroring tests.",
+      "verification": "Demonstrate representative logic faults fail tests."
+    },
+    {
+      "id": "R096",
+      "original_number": 96,
+      "pillar": "engineering",
+      "title": "End-to-end testing",
+      "kind": "control",
+      "applies_when": "Critical user journeys",
+      "guidance": "Test meaningful behavior and recovery using isolated data; include accessibility and real supported browsers where feasible.",
+      "verification": "Run success and failure paths without dependence on production credentials."
+    },
+    {
+      "id": "R097",
+      "original_number": 97,
+      "pillar": "engineering",
+      "title": "Interface contracts",
+      "kind": "control",
+      "applies_when": "Separate client/server boundaries",
+      "guidance": "Use versioned runtime schemas and generated types where helpful; type safety alone does not validate hostile input.",
+      "verification": "Test incompatible payloads and backward compatibility of deployed clients."
+    },
+    {
+      "id": "R098",
+      "original_number": 98,
+      "pillar": "engineering",
+      "title": "Development parity",
+      "kind": "control",
+      "applies_when": "Multiple deployment environments",
+      "guidance": "Match relevant versions/configuration shape using synthetic data; never copy production secrets or personal data into local development.",
+      "verification": "Start from documented setup and compare required config keys."
+    },
+    {
+      "id": "R099",
+      "original_number": 99,
+      "pillar": "engineering",
+      "title": "Dependency security",
+      "kind": "control",
+      "applies_when": "Third-party code",
+      "guidance": "Use lockfiles, automated vulnerability and secret scanning, update policy and reviewed advisories; triage exploitability and document time-bounded exceptions.",
+      "verification": "Introduce a test finding and verify triage/remediation workflow."
+    },
+    {
+      "id": "R100",
+      "original_number": 100,
+      "pillar": "engineering",
+      "title": "Readable maintainable code",
+      "kind": "control",
+      "applies_when": "All application code",
+      "guidance": "Use domain names, small cohesive modules and explanations for nonobvious decisions; document operations and public interfaces where names alone are insufficient.",
+      "verification": "Have a reviewer trace a core workflow and locate its failure/recovery paths."
+    }
+  ]
+}
