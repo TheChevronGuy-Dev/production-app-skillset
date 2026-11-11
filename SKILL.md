@@ -1,9 +1,24 @@
 ---
 name: build-production-apps
-description: Scope, implement, and review HTTP/HTTPS web, Android and iOS application safeguards using a 100-rule catalog covering security, payments, performance, accessibility, search, operations, analytics, communications, localization, and engineering. Use for production-readiness reviews, app implementation plans, checkout/authentication work, and requests to apply this app-development skillset. Select relevant rules instead of installing every technology.
+description: Guide beginners and experienced developers from an app or website idea through implementation, verification and deployment handoff. Use for building or reviewing HTTP/HTTPS web, API, Android and iOS products, including accounts, payments and mailing lists, with an applicable 100-rule catalog and feature-specific launch checks.
 ---
 
 # Build production apps
+
+## Start at the right stage
+
+For an idea or a new build, read [Idea to launch](references/idea-to-launch.md). Adapt explanations to the user's experience; define the first useful journey, then build and demonstrate it. For an existing app review, begin with the workflow below and preserve the current architecture unless a change is justified. For deployment/export, read [Host handoff](references/host-handoff.md).
+
+Use `python3 <skill-dir>/scripts/launch.py init --name "My idea" --platform web --output <new-planning-directory>` to create a private brief, plan, selected guides and evidence templates. Add repeated `--platform` options for multiple targets and `--feature accounts`, `--feature payments`, `--feature mailing-list` or `--feature e2ee` only when needed. This generates planning documents, not application code; proceed to implement the user's authorized app. The destination must not exist. If Python is unavailable, create equivalent planning documents and disclose that the CLI checks were not run.
+
+Read selected implementation guides:
+
+- [Accounts](references/accounts.md): signup, login, passwords, sessions, recovery and authorization.
+- [Commerce](references/commerce.md): hosted/store checkout, financial state, refunds and subscriptions.
+- [Mailing lists](references/mailing-lists.md): subscription forms, sender setup, preferences, suppression and campaigns.
+- [Private content](references/private-content.md): optional end-to-end encryption, key recovery and specialist review.
+
+Do not imply that this package automatically secures an app. Track what was implemented, what was actually verified and what remains unresolved. Existing user authorization governs implementation and publication; generating a plan does not authorize paid resources or real campaigns.
 
 ## Follow this workflow
 
@@ -15,7 +30,7 @@ description: Scope, implement, and review HTTP/HTTPS web, Android and iOS applic
 6. Implement within the requested scope in small reviewable changes. Prefer framework protections and managed services over custom authentication, cryptography or payment handling. Keep prices, authorization and critical state transitions authoritative on the server.
 7. Run meaningful tests for changed behavior, failure paths, authorization boundaries and concurrency. Use sandbox credentials and synthetic data. For UI, verify keyboard and representative device behavior as well as automated checks.
 8. Record commands/results and evidence paths against rule IDs. Say which checks were not run. A checklist or CLI success is not proof of security, compliance, accessibility conformance or scalability.
-9. Record platform checks separately from the numbered assessment; never imply the CLI gate includes them. For a build task, verify a runnable critical journey and document setup, required configuration names (no secret values), supported platforms and remaining manual checks.
+9. Record feature and platform evidence in launch.json when using the planner. The numbered assessment alone does not cover these checks; the launch gate combines both declaration sets. Check the full relevant guides for risks beyond these summaries. For a build task, verify a runnable critical journey and document setup, required configuration names (no secret values), supported platforms and remaining manual checks.
 10. Report implemented changes, unresolved blockers and explicit tradeoffs. Do not claim production readiness while applicable critical controls remain unverified. Publish/deploy only when authorized by the user's task.
 
 ## Load relevant references
@@ -45,3 +60,7 @@ description: Scope, implement, and review HTTP/HTTPS web, Android and iOS applic
 - Review evidence structure: `python3 <skill-dir>/scripts/rules.py review assessment.json`.
 - Gate declared completion: add `--gate`; this rejects unresolved selected rules, but does not inspect code, verify evidence truth or assess omitted rules.
 - Keep assessment files private if they reveal security weaknesses, customer data or internal architecture. Never add credentials to evidence.
+
+- Review launch declarations: `python3 <skill-dir>/scripts/launch.py review <planning-directory>/launch.json`.
+- Gate declared launch completion: add `--gate`; this also requires the full `all` profile assessment in sibling `assessment.json` (or `--assessment <path>`). Both files need actual scope and evidence/exclusions. `--format json` supports CI. This verifies declarations, not application behavior, evidence truth, feature completeness or compliance.
+- Preserve source, migrations, configuration names, verification commands and owner-readable deployment/recovery instructions in the app handoff. Never export live secrets or private evidence by default.

@@ -8,3 +8,5 @@ Keep the catalog useful to both humans and coding assistants. Propose a concrete
 4. Explain changes and test results in the pull request. Link primary documentation for technical corrections.
 
 Never add real credentials, production data, completed private assessments, copied proprietary guides or claims that passing this toolkit certifies a product. Keep the CLI offline and dependency-free. Review public instructions for platform-specific assumptions. Add regression tests when changing CLI behavior.
+
+For launch-planner changes, preserve checkpoint IDs, update feature/platform selection tests, and test both a new unresolved plan and a completed synthetic declaration set. Generated plans are documentation, not application scaffolds. Never count a passing declaration gate as a security audit.
