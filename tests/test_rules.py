@@ -48,6 +48,43 @@ class CatalogTests(unittest.TestCase):
         assessment['rules'][0]['status'] = 'pass'
         self.assertIn('R001: pass requires evidence', rules.review(assessment, self.items))
 
+    def test_fail_requires_nonblank_reason(self):
+        assessment = self.assessment()
+        for reason in ('', '  ', None, 42):
+            assessment['rules'][0].update(status='fail', reason=reason)
+            self.assertIn('R001: fail requires reason', rules.review(assessment, self.items))
+        assessment['rules'][0]['reason'] = 'Cross-tenant access succeeds; scope query by tenant.'
+        self.assertEqual([], rules.review(assessment, self.items))
+        self.assertIn('R001: unresolved (fail)', rules.review(assessment, self.items, gate=True))
+
+    def test_deferred_date_format(self):
+        assessment = self.assessment()
+        entry = assessment['rules'][0]
+        entry.update(status='deferred', reason='Pending review', owner='team')
+        for value in ('tomorrow', '2027-02-30', '20270101'):
+            entry['review_by'] = value
+            self.assertIn('R001: review_by must be a valid YYYY-MM-DD date', rules.review(assessment, self.items))
+        entry['review_by'] = '2027-01-01'
+        self.assertEqual([], rules.review(assessment, self.items))
+
+    def test_review_cli_json_and_windows_bom(self):
+        assessment = self.assessment()
+        assessment['rules'][0]['status'] = 'fail'
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / 'assessment.json'
+            path.write_text(json.dumps(assessment), encoding='utf-8-sig')
+            result = subprocess.run([sys.executable, str(ROOT/'scripts/rules.py'), 'review', str(path), '--format', 'json'], capture_output=True, text=True)
+            self.assertEqual(1, result.returncode, result.stderr)
+            report = json.loads(result.stdout)
+            self.assertFalse(report['valid'])
+            self.assertFalse(report['evidence_verified'])
+            self.assertIn('R001: fail requires reason', report['errors'])
+            assessment['rules'][0]['reason'] = 'Boundary failure; add authorization.'
+            path.write_text(json.dumps(assessment), encoding='utf-8')
+            result = subprocess.run([sys.executable, str(ROOT/'scripts/rules.py'), 'review', str(path), '--format', 'json'], capture_output=True, text=True)
+            self.assertEqual(0, result.returncode, result.stderr)
+            self.assertTrue(json.loads(result.stdout)['valid'])
+
     def test_na_and_deferred_require_rationale(self):
         assessment = self.assessment()
         for status in ('not-applicable', 'deferred'):

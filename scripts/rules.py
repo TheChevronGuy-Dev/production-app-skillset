@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Offline catalog/checklist utility. Never scans, modifies, or certifies an app."""
 import argparse
+from datetime import date
 import json
 import sys
 from pathlib import Path
@@ -91,10 +92,17 @@ def review(assessment, rules, gate=False):
             return isinstance(entry.get(key), str) and bool(entry[key].strip())
         if status == 'pass' and not present('evidence'):
             errors.append(f'{rid}: pass requires evidence')
-        if status in {'not-applicable', 'deferred'} and not present('reason'):
+        if status in {'fail', 'not-applicable', 'deferred'} and not present('reason'):
             errors.append(f'{rid}: {status} requires reason')
         if status == 'deferred' and not all(present(k) for k in ('owner', 'review_by')):
             errors.append(f'{rid}: deferred requires owner and review_by')
+        if status == 'deferred' and present('review_by'):
+            try:
+                date.fromisoformat(entry['review_by'])
+                if len(entry['review_by']) != 10:
+                    raise ValueError('use YYYY-MM-DD')
+            except ValueError:
+                errors.append(f'{rid}: review_by must be a valid YYYY-MM-DD date')
         if gate and status in {'todo', 'fail', 'deferred'}:
             errors.append(f'{rid}: unresolved ({status})')
     for rid in sorted(expected - seen):
@@ -118,6 +126,7 @@ def main(argv=None):
     p = sub.add_parser('review', help='validate assessment structure and declared evidence')
     p.add_argument('file', type=Path)
     p.add_argument('--gate', action='store_true', help='also reject unresolved selected rules')
+    p.add_argument('--format', choices=('text', 'json'), default='text', help='review output format for humans or CI')
     args = parser.parse_args(argv)
     try:
         data = catalog()
@@ -128,7 +137,11 @@ def main(argv=None):
         if args.command == 'validate':
             print('Catalog valid: 100 rules. This does not inspect any application.')
         elif args.command == 'review':
-            errors = review(json.loads(args.file.read_text(encoding='utf-8')), rules, args.gate)
+            errors = review(json.loads(args.file.read_text(encoding='utf-8-sig')), rules, args.gate)
+            if args.format == 'json':
+                print(json.dumps({'valid': not errors, 'gate': args.gate, 'errors': errors,
+                                  'evidence_verified': False}))
+                return 1 if errors else 0
             if errors:
                 print('\n'.join(errors), file=sys.stderr)
                 return 1

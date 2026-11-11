@@ -1,8 +1,8 @@
 # Production App Skillset
 
-A reusable AI coding skill built from 100 app-development rules, organized into ten pillars. Use it to scope, implement and review web/mobile applications without treating every technology as mandatory.
+A reusable AI coding skill for HTTP/HTTPS web, Android and iOS applications, built from 100 app-development rules, organized into ten pillars. Use it to scope, implement and review web/mobile applications without treating every technology as mandatory.
 
-**Version:** 1.0.0 · **License:** MIT · **CLI:** Python 3.10+ standard library only
+**Version:** 1.0.1 (catalog 1.0.0) · **License:** MIT · **CLI:** Python 3.10+ standard library only
 
 This is a skill and reference toolkit, not an application framework, automatic security scanner or compliance certification. It does not implement all controls for you. Its CLI generates checklists and validates recorded assessments; the coding assistant and developer perform the actual implementation and verification.
 
@@ -43,12 +43,13 @@ python3 scripts/rules.py checklist --pillar security > security-checklist.md
 python3 scripts/rules.py init --profile all > assessment.json
 python3 scripts/rules.py review assessment.json
 python3 scripts/rules.py review assessment.json --gate
+python3 scripts/rules.py review assessment.json --gate --format json
 python3 -m unittest discover -s tests -v
 ```
 
 Redirection creates or replaces a file; choose a new filename to preserve existing work. `rules.py` only reads files and writes stdout/stderr. The maintenance command `render_references.py` rewrites the ten bundled pillar guides unless `--check` is used. They do not contact the network, modify the target app, install dependencies or read environment secrets.
 
-Profiles: `all`, `web`, `saas`, `ecommerce`, `api`, `mobile`. They select broad groups, not exact applicability. `ecommerce` includes all ten pillars. Use `all` when completeness matters. A SaaS app with billing must add payment rules; a mobile app may also need checkout. Native mobile guidance is in `references/additional-safeguards.md` and is outside the numbered CLI gate.
+Profiles: `all`, `web`, `saas`, `ecommerce`, `api`, `mobile`. They select broad groups, not exact applicability. `ecommerce` includes all ten pillars. Use `all` when completeness matters. A SaaS app with billing must add payment rules; a mobile app may also need checkout. Use `references/platform-security.md` for dedicated web/API, Android, iOS and hybrid security/usability checks, plus `references/additional-safeguards.md` for broader gaps. Record these in a companion review: they are outside the numbered CLI gate. A profile is not a complete platform audit.
 
 ## Record evidence honestly
 
@@ -60,9 +61,9 @@ Edit the generated assessment's `scope` to name the repository/revision/environm
 | `pass` | `evidence`: test command/result, reviewed path or manual observation |
 | `fail` | Record finding and next action in `reason` |
 | `not-applicable` | `reason`: why the condition does not apply |
-| `deferred` | `reason`, `owner`, `review_by` |
+| `deferred` | `reason`, `owner`, `review_by` (valid `YYYY-MM-DD`) |
 
-`review` checks structure and supporting-field presence. `--gate` also rejects `todo`, `fail`, `deferred`, missing selected rules and unchanged scope placeholders. Exit codes: **0** validation succeeded, **1** assessment findings, **2** input/catalog error. A passing gate validates declarations, not their truth. It cannot verify application behavior, evidence quality, excluded modules or the additional safeguards. Review exceptions and evidence manually.
+`review` checks structure and supporting-field presence, including a nonblank reason for failures and a valid calendar date for deferrals. It accepts UTF-8 assessment files with or without a Windows BOM. `--format json` returns valid/gate/errors/evidence_verified fields for parsed assessments; input/catalog errors still use stderr and exit code 2. Dates record review commitments; the CLI does not enforce scheduling or reminders. `--gate` also rejects `todo`, `fail`, `deferred`, missing selected rules and unchanged scope placeholders. Exit codes: **0** validation succeeded, **1** assessment findings, **2** input/catalog error. A passing gate validates declarations, not their truth. It cannot verify application behavior, evidence quality, excluded modules or the additional safeguards. Review exceptions and evidence manually.
 
 Do not publish filled assessments containing private vulnerabilities, secrets or customer data.
 
@@ -89,3 +90,7 @@ Do not run these initialization commands inside an unrelated existing repository
 ## Maintain the catalog
 
 Edit `data/rules.json`, preserve stable IDs and regenerate pillar references with `python3 scripts/render_references.py`. Run tests and validation before contributing. See `CONTRIBUTING.md` and `SECURITY.md`. Recheck source guidance when applying it to a specific stack; the links are reference points, not a perpetual freshness guarantee.
+
+## Changes in 1.0.1
+
+Fixed missing failure-rationale validation; added deferred-date validation, JSON assessment-review output and Windows UTF-8 BOM input support. Added platform security/usability guidance and explicit build-verification instructions. Rule IDs, catalog version and assessment schema remain unchanged. Existing failed entries without reasons must now be completed.

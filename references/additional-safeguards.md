@@ -12,3 +12,5 @@ The numbered catalog preserves the user's original scope. It is not exhaustive. 
 - **Operations:** assign incident ownership, alerts, escalation, migration recovery and explicit availability objectives. Test restoration, not just backup creation.
 
 Document which additional items apply in the assessment scope or an accompanying review. They are not silently included in the 100-rule CLI gate.
+
+For HTTP/HTTPS, Android, iOS and hybrid implementation checks, use [Platform security and usability](platform-security.md). Record these checks separately; the numbered gate does not cover them.

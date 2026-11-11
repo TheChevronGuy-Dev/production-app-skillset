@@ -1,6 +1,6 @@
 ---
 name: build-production-apps
-description: Scope, implement, and review web and mobile application safeguards using a 100-rule catalog covering security, payments, performance, accessibility, search, operations, analytics, communications, localization, and engineering. Use for production-readiness reviews, app implementation plans, checkout/authentication work, and requests to apply this app-development skillset. Select relevant rules instead of installing every technology.
+description: Scope, implement, and review HTTP/HTTPS web, Android and iOS application safeguards using a 100-rule catalog covering security, payments, performance, accessibility, search, operations, analytics, communications, localization, and engineering. Use for production-readiness reviews, app implementation plans, checkout/authentication work, and requests to apply this app-development skillset. Select relevant rules instead of installing every technology.
 ---
 
 # Build production apps
@@ -11,11 +11,12 @@ description: Scope, implement, and review web and mobile application safeguards 
 2. Record users, data sensitivity, trust boundaries, supported platforms, traffic expectations, tenant boundaries and recovery needs. Infer routine choices from the project; ask only for decisions that materially affect implementation.
 3. Generate candidate rules with `python3 <skill-dir>/scripts/rules.py checklist --profile <profile>`. Profiles are broad starting points, not complete applicability decisions. Search the full catalog for omitted features; use `all` for a comprehensive review. On Windows, use `py -3` if appropriate.
 4. Mark each selected rule applicable, not applicable with rationale, or deferred with owner and review date. Distinguish conditional controls from optional product/architecture decisions. Do not add payments, tracking, Redis, micro-frontends, dark mode or multi-region infrastructure merely to satisfy this catalog.
-5. Read only relevant modules below. Check current primary documentation for framework/provider behavior, security parameters, standards and jurisdiction-specific obligations. Use the source index as a starting point, not a claim that every rule was formally audited.
+5. Read only relevant modules below. For browser/API, Android, iOS or hybrid work, also read the relevant sections of [Platform security and usability](references/platform-security.md). Check current primary documentation for framework/provider behavior, security parameters, standards and jurisdiction-specific obligations. Use the source index as a starting point, not a claim that every rule was formally audited.
 6. Implement within the requested scope in small reviewable changes. Prefer framework protections and managed services over custom authentication, cryptography or payment handling. Keep prices, authorization and critical state transitions authoritative on the server.
 7. Run meaningful tests for changed behavior, failure paths, authorization boundaries and concurrency. Use sandbox credentials and synthetic data. For UI, verify keyboard and representative device behavior as well as automated checks.
 8. Record commands/results and evidence paths against rule IDs. Say which checks were not run. A checklist or CLI success is not proof of security, compliance, accessibility conformance or scalability.
-9. Report implemented changes, unresolved blockers and explicit tradeoffs. Do not claim production readiness while applicable critical controls remain unverified. Publish/deploy only when authorized by the user's task.
+9. Record platform checks separately from the numbered assessment; never imply the CLI gate includes them. For a build task, verify a runnable critical journey and document setup, required configuration names (no secret values), supported platforms and remaining manual checks.
+10. Report implemented changes, unresolved blockers and explicit tradeoffs. Do not claim production readiness while applicable critical controls remain unverified. Publish/deploy only when authorized by the user's task.
 
 ## Load relevant references
 
